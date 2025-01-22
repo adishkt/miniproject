@@ -26,7 +26,7 @@ function App() {
     >
       <h1>Map with Tooltip</h1>
       {/* ReactTooltip: This is now dynamically updated */}
-      <ReactTooltip>{content}</ReactTooltip>
+      {/* <ReactTooltip>{content}</ReactTooltip> */}
       <div style={{ width: "1400px", borderStyle: "double" }}>
         <ComposableMap>
           <ZoomableGroup zoom={1}>
