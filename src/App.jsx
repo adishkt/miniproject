@@ -6,7 +6,7 @@ import {
   Geography,
   ZoomableGroup,
 } from "react-simple-maps";
-import { ReactTooltip } from 'react-tooltip';  // Correct named import
+// import { ReactTooltip } from 'react-tooltip';  // Correct named import
 
 const Url = "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
 
@@ -46,7 +46,7 @@ function App() {
                     }}
                     style={{
                       default: {
-                        fill: "#ECEFF1",  // Default fill color
+                        fill: "black",  // Default fill color
                         outline: "none",  // No outline
                       },
                       hover: {
