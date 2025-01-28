@@ -1,68 +1,107 @@
-import { useState } from 'react';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import { csv } from "d3-fetch";
+import { scaleLinear } from "d3-scale";
 import {
   ComposableMap,
   Geographies,
   Geography,
-  ZoomableGroup,
+  Sphere,
+  Graticule
 } from "react-simple-maps";
-// import { ReactTooltip } from 'react-tooltip';  // Correct named import
 
-const Url = "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
+const geoUrl = "/features.json";
 
-function App() {
-  const [content, setContent] = useState("");  // Renamed for consistency
+const colorScale = scaleLinear()
+  .domain([0.29, 0.68])
+  .range(["#ffedea", "#ff5233"]);
+
+const MapChart = () => {
+  const [data, setData] = useState([]);
+  const [tooltipContent, setTooltipContent] = useState(""); // Tooltip content
+  const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 }); // Tooltip position
+
+  useEffect(() => {
+    csv(`/v.csv`).then((data) => {
+      setData(data);
+    });
+  }, []);
+
+  const handleMouseEnter = (event, geo, d) => {
+    const countryName = geo.properties.NAME; // Country name from GeoJSON
+    // Find the country data based on ISO3 code
+    const countryData = d ? d["2017"] : null;
+    
+    // If no data is found, display "No data"
+    const value = countryData !== null ? countryData : "No data"; 
+    setTooltipContent(`${countryName}: ${value}`);
+    setTooltipPosition({ x: event.pageX, y: event.pageY });
+  };
+
+  const handleMouseMove = (event) => {
+    setTooltipPosition({ x: event.pageX, y: event.pageY }); // Update position
+  };
+
+  const handleMouseLeave = () => {
+    setTooltipContent(""); // Hide tooltip when mouse leaves
+  };
+
   return (
-    <div
-      className="App"
-      style={{
-        width: "100%",
-        height: "100%",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <h1>Map with Tooltip</h1>
-      {/* ReactTooltip: This is now dynamically updated */}
-      {/* <ReactTooltip>{content}</ReactTooltip> */}
-      <div style={{ width: "1400px", borderStyle: "double" }}>
-        <ComposableMap>
-          <ZoomableGroup zoom={1}>
-            <Geographies geography={Url}>
-              {({ geographies }) =>
-                geographies.map((geo) => (
+    <div style={{ position: "relative" }}>
+      <ComposableMap
+        projectionConfig={{
+          rotate: [-10, 0, 0],
+          scale: 147
+        }}
+      >
+        <Sphere stroke="#E4E5E6" strokeWidth={0.5} />
+        <Graticule stroke="#E4E5E6" strokeWidth={0.5} />
+        {data.length > 0 && (
+          <Geographies geography={geoUrl}>
+            {({ geographies }) =>
+              geographies.map((geo) => {
+                // Find matching country data by ISO3 code
+                const d = data.find((s) => s.ISO3 === geo.id);
+
+                return (
                   <Geography
                     key={geo.rsmKey}
                     geography={geo}
-                    data-tip={geo.properties.NAME}  // Tooltip data dynamically set
-                    onMouseEnter={() => {
-                      const { NAME } = geo.properties;
-                      setContent(`${NAME}`);  // Update tooltip content
-                    }}
-                    onMouseLeave={() => {
-                      setContent("");  // Clear content on mouse leave
-                    }}
+                    fill={d ? colorScale(d["2017"]) : "#F5F4Fb"}
+                    onMouseEnter={(event) => handleMouseEnter(event, geo, d)}
+                    onMouseMove={handleMouseMove} // To track mouse movement
+                    onMouseLeave={handleMouseLeave}
                     style={{
-                      default: {
-                        fill: "black",  // Default fill color
-                        outline: "none",  // No outline
-                      },
-                      hover: {
-                        fill: "#F53",  // Color when hovering
-                        outline: "none",
-                      },
+                      default: { outline: "none" },
+                      hover: { outline: "none", fill: "#FF5722" }, // Highlight on hover
+                      pressed: { outline: "none" }
                     }}
                   />
-                ))
-              }
-            </Geographies>
-          </ZoomableGroup>
-        </ComposableMap>
-      </div>
+                );
+              })
+            }
+          </Geographies>
+        )}
+      </ComposableMap>
+      {/* Tooltip */}
+      {tooltipContent && (
+        <div
+          style={{
+            position: "absolute",
+            top: tooltipPosition.y + 10,
+            left: tooltipPosition.x + 10,
+            backgroundColor: "white",
+            padding: "5px 10px",
+            borderRadius: "5px",
+            boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+            pointerEvents: "none",
+            fontSize: "22px"
+          }}
+        >
+          {tooltipContent}
+        </div>
+      )}
     </div>
   );
-}
+};
 
-export default App;
+export default MapChart;
