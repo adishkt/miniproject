@@ -27,9 +27,9 @@ const MapChart = () => {
   }, []);
 
   const handleMouseEnter = (event, geo, d) => {
-    const countryName = geo.properties.NAME; // Country name from GeoJSON
+    const countryName = geo.properties.name; // Country name from GeoJSON
     // Find the country data based on ISO3 code
-    const countryData = d ? d["2017"] : null;
+    const countryData = d ? d["1995"] : null;
     
     // If no data is found, display "No data"
     const value = countryData !== null ? countryData : "No data"; 
@@ -46,7 +46,13 @@ const MapChart = () => {
   };
 
   return (
-    <div style={{ position: "relative" }}>
+    <div style={{ position: "relative",width: "100%",
+      height: "100%",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center" }}>
+          <h1 style={{color:"black"}} >ujithraanishmemorial_map</h1>
       <ComposableMap
         projectionConfig={{
           rotate: [-10, 0, 0],
@@ -90,11 +96,11 @@ const MapChart = () => {
             top: tooltipPosition.y + 10,
             left: tooltipPosition.x + 10,
             backgroundColor: "white",
-            padding: "5px 10px",
+            padding: "10px 10px",
             borderRadius: "5px",
             boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
             pointerEvents: "none",
-            fontSize: "22px"
+            fontSize: "32px"
           }}
         >
           {tooltipContent}
