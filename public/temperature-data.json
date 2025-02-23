@@ -1,0 +1,9 @@
+[
+    {"Country": "United States", "dt": "2000", "AverageTemperature": 12.5},
+    {"Country": "Canada", "dt": "2000", "AverageTemperature": -5.2},
+    {"Country": "Brazil", "dt": "2000", "AverageTemperature": 22.3},
+    {"Country": "United States", "dt": "2001", "AverageTemperature": 13.0},
+    {"Country": "Canada", "dt": "2001", "AverageTemperature": -4.8},
+    {"Country": "Brazil", "dt": "2001", "AverageTemperature": 23.1}
+  ]
+  

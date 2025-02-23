@@ -1,113 +1,28 @@
-import React, { useEffect, useState } from "react";
-import { csv } from "d3-fetch";
-import { scaleLinear } from "d3-scale";
-import {
-  ComposableMap,
-  Geographies,
-  Geography,
-  Sphere,
-  Graticule
-} from "react-simple-maps";
+import { useState } from "react";
+import { Route, Routes } from "react-router-dom";
+import Nav from "./components/Nav";
+import Hom from "./components/Hom";
+import Mapp from "./components/Mapp";
+import Air from "./components/Air";
+import Team from "./components/Team";
 
-const geoUrl = "/features.json";
 
-const colorScale = scaleLinear()
-  .domain([0.29, 0.68])
-  .range(["#ffedea", "#ff5233"]);
 
-const MapChart = () => {
-  const [data, setData] = useState([]);
-  const [tooltipContent, setTooltipContent] = useState(""); // Tooltip content
-  const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 }); // Tooltip position
-
-  useEffect(() => {
-    csv(`/v.csv`).then((data) => {
-      setData(data);
-    });
-  }, []);
-
-  const handleMouseEnter = (event, geo, d) => {
-    const countryName = geo.properties.name; // Country name from GeoJSON
-    // Find the country data based on ISO3 code
-    const countryData = d ? d["1995"] : null;
-    
-    // If no data is found, display "No data"
-    const value = countryData !== null ? countryData : "No data"; 
-    setTooltipContent(`${countryName}: ${value}`);
-    setTooltipPosition({ x: event.pageX, y: event.pageY });
-  };
-
-  const handleMouseMove = (event) => {
-    setTooltipPosition({ x: event.pageX, y: event.pageY }); // Update position
-  };
-
-  const handleMouseLeave = () => {
-    setTooltipContent(""); // Hide tooltip when mouse leaves
-  };
-
+function App() {
   return (
-    <div style={{ position: "relative",width: "100%",
-      height: "100%",
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "center",
-      alignItems: "center" }}>
-          <h1 style={{color:"black"}} >ujithraanishmemorial_map</h1>
-      <ComposableMap
-        projectionConfig={{
-          rotate: [-10, 0, 0],
-          scale: 147
-        }}
-      >
-        <Sphere stroke="#E4E5E6" strokeWidth={0.5} />
-        <Graticule stroke="#E4E5E6" strokeWidth={0.5} />
-        {data.length > 0 && (
-          <Geographies geography={geoUrl}>
-            {({ geographies }) =>
-              geographies.map((geo) => {
-                // Find matching country data by ISO3 code
-                const d = data.find((s) => s.ISO3 === geo.id);
+    <>
+      <Nav/>
+      <Routes>
+        <Route path="/" element={<Hom/>} />
+        <Route path="/map1" element={<Mapp/>} />
+        <Route path="/map2" element={<Air/>} />
+        <Route path="/team" element={<Team/>} />
 
-                return (
-                  <Geography
-                    key={geo.rsmKey}
-                    geography={geo}
-                    fill={d ? colorScale(d["2017"]) : "#F5F4Fb"}
-                    onMouseEnter={(event) => handleMouseEnter(event, geo, d)}
-                    onMouseMove={handleMouseMove} // To track mouse movement
-                    onMouseLeave={handleMouseLeave}
-                    style={{
-                      default: { outline: "none" },
-                      hover: { outline: "none", fill: "#FF5722" }, // Highlight on hover
-                      pressed: { outline: "none" }
-                    }}
-                  />
-                );
-              })
-            }
-          </Geographies>
-        )}
-      </ComposableMap>
-      {/* Tooltip */}
-      {tooltipContent && (
-        <div
-          style={{
-            position: "absolute",
-            top: tooltipPosition.y + 10,
-            left: tooltipPosition.x + 10,
-            backgroundColor: "white",
-            padding: "10px 10px",
-            borderRadius: "5px",
-            boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
-            pointerEvents: "none",
-            fontSize: "32px"
-          }}
-        >
-          {tooltipContent}
-        </div>
-      )}
-    </div>
+
+
+      </Routes>
+    </>
   );
-};
+}
 
-export default MapChart;
+export default App;
