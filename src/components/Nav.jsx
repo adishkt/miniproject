@@ -12,11 +12,6 @@ const Nav = () => {
               Climate chamge and air quality prediction
             </Typography>
             <Button>
-              <Link style={{ textDecoration: "none", color: "white", fontFamily:"fantasy", fontSize:"40px" }} to={"/"}>
-                Home
-              </Link>
-            </Button>
-            <Button>
               <Link
                 style={{ textDecoration: "none", color: "white", fontFamily:"fantasy", fontSize:"40px"}}
                 to={"/map1"}
@@ -30,14 +25,6 @@ const Nav = () => {
                 to={"/map2"}
               >
                 Air Quality
-              </Link>
-            </Button>
-            <Button>
-              <Link
-                style={{ textDecoration: "none", color: "white", fontFamily:"fantasy", fontSize:"40px"}}
-                to={"/team"}
-              >
-                Developers
               </Link>
             </Button>
           </Toolbar>
