@@ -14,7 +14,7 @@ const Nav = () => {
             <Button>
               <Link
                 style={{ textDecoration: "none", color: "white", fontFamily:"fantasy", fontSize:"40px"}}
-                to={"/map1"}
+                to={"/"}
               >
                 climate change
               </Link>
