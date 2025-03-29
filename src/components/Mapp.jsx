@@ -77,7 +77,7 @@ const MapChart = () => {
   return (
     <div style={{ position: "relative", width: "100%", height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
       <Typography variant="h1" sx={{ color: "white", fontFamily: "fantasy", paddingTop: "20px" }}>
-        Climate Change Prediction
+        Surface Temperature
       </Typography>
 
       <Select

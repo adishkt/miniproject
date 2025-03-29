@@ -9,14 +9,14 @@ const Nav = () => {
         {/* <AppBar position="static" color="black" sx={{color:"black"}}> */}
           <Toolbar>
             <Typography variant="h3" component="div" sx={{ flexGrow: 1, color:"white", fontFamily:"cursive",}}>
-              Climate chamge and air quality prediction
+              Climate chamge and GHG prediction
             </Typography>
             <Button>
               <Link
                 style={{ textDecoration: "none", color: "white", fontFamily:"fantasy", fontSize:"40px"}}
                 to={"/"}
               >
-                climate change
+                Surface Temp
               </Link>
             </Button>
             <Button>
@@ -24,7 +24,7 @@ const Nav = () => {
                 style={{ textDecoration: "none", color: "white", fontFamily:"fantasy", fontSize:"40px"}}
                 to={"/map2"}
               >
-                Air Quality
+                GHG
               </Link>
             </Button>
           </Toolbar>
