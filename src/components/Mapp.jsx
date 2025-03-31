@@ -13,7 +13,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Typography, ButtonGroup, Button } from "@mui/material";
-import "./air.css";
+import "./map.css";
 
 const geoUrl = "/features.json";
 
@@ -86,11 +86,11 @@ const MapChart = () => {
         <Button onClick={handleZoomIn}>Zoom In</Button>
         <Button onClick={handleZoomOut}>Zoom Out</Button>
       </ButtonGroup>
-      <div className="legend">
-          <div className="legend-gradient"></div>
-          <div className="legend-labels">
+      <div className="legend1">
+          <div className="legend-gradient1"></div>
+          <div className="legend-labels1">
             {[-15, 0, 15, 30, 45, 60, 75, 95].map((temp, index) => (
-              <span key={index} className="legend-label">{temp}°C</span>
+              <span key={index} className="legend-label1">{temp}°C</span>
             ))}
           </div>
         </div>

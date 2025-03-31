@@ -1,5 +1,5 @@
 /* Legend container styling */
-.legend {
+.legend1 {
     position: absolute;
     left: 20px;
     top: 20%;
@@ -13,7 +13,7 @@
   }
   
   /* Gradient legend for temperature scale with black background */
-  .legend-gradient {
+  .legend-gradient1 {
     width: 40px;
     height: 400px;
     background: linear-gradient(
@@ -25,7 +25,7 @@
   }
   
   /* Temperature labels in black theme */
-  .legend-labels {
+  .legend-labels1 {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -33,7 +33,7 @@
     margin-left: 20px;
   }
   
-  .legend-label {
+  .legend-label1 {
     color: white;
     font-size: 16px;
   }

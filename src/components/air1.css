@@ -7,7 +7,7 @@
     background-color: rgba(0, 0, 0, 0.9);
     padding: 20px;
     border-radius: 12px;
-    width: 120px;
+    width: 180px; /* Increased width for labels */
     display: flex;
     align-items: center;
   }
@@ -18,23 +18,25 @@
     height: 400px;
     background: linear-gradient(
       to top,
-       #004D00,#008000, #00B300, #33CC33, #66FF66,
+      #004D00, #008000, #00B300, #33CC33, #66FF66,
       #99FF99, #BFFFC2, #DFFFD6
     );
     border-radius: 12px;
   }
-  #DFFFD6, #BFFFC2, #99FF99, #66FF66, #33CC33, #00B300, #008000
   
-  /* Temperature labels in black theme */
+  /* Temperature labels aligned vertically */
   .legend-labels {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: space-between; 
     height: 400px;
-    margin-left: 20px;
+    margin-left: 43px; /* Add margin to separate from the gradient */
   }
   
+  /* Individual label styles */
   .legend-label {
     color: white;
-    font-size: 16px;
+    font-size: 14px; /* Slightly reduced to prevent overlap */
+    white-space: nowrap; /* Prevent text wrapping */
   }
+  
