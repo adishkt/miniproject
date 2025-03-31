@@ -86,6 +86,14 @@ const MapChart = () => {
         <Button onClick={handleZoomIn}>Zoom In</Button>
         <Button onClick={handleZoomOut}>Zoom Out</Button>
       </ButtonGroup>
+      <div className="legend">
+          <div className="legend-gradient"></div>
+          <div className="legend-labels">
+            {[-15, 0, 15, 30, 45, 60, 75, 95].map((temp, index) => (
+              <span key={index} className="legend-label">{temp}°C</span>
+            ))}
+          </div>
+        </div>
 
       <ComposableMap projectionConfig={{ rotate: [-10, 0, 0], scale: 147 }}>
         <ZoomableGroup zoom={zoomLevel}>

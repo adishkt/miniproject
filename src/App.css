@@ -1,7 +1,99 @@
-#root {
+/* #root {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
   background-color: rgb(8, 8, 8);
+} */
+
+
+
+
+
+/* Reset and Global Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
 }
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  background-color: #000;
+  color: white;
+  zoom: 0; /* Ensure no zoom issues */
+}
+
+/* Ensure proper viewport scaling */
+@media screen and (max-width: 768px) {
+  html {
+    font-size: 11px;
+  }
+}
+
+/* Container styling for consistent layout */
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+/* Grid2 Custom Fix */
+.MuiGrid2-root {
+  width: 100%;
+}
+
+/* Navigation styling */
+Nav {
+  width: 100%;
+  background-color: #fefefe;
+  padding: 10px 20px;
+ 
+}
+
+Nav a {
+  color: rgb(216, 88, 88);
+  text-decoration: none;
+  margin: 0 15px;
+}
+
+Nav a:hover {
+  color: #ee0f0f;
+}
+
+/* Buttons and Interactive Elements */
+button {
+  background-color: #0e0d0d;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+button:hover {
+  background-color: #d00f0f;
+}
+
+/* Responsive Map Styling */
+.map-container {
+  width: 100%;
+  height: calc(100vh - 100px); /* Adjust based on nav height */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Fix for overflow in map visualization */
+canvas, svg {
+  max-width: 100%;
+  height: auto;
+}
+

@@ -1,0 +1,40 @@
+/* Legend container styling */
+.legend {
+    position: absolute;
+    left: 20px;
+    top: 20%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.9);
+    padding: 20px;
+    border-radius: 12px;
+    width: 120px;
+    display: flex;
+    align-items: center;
+  }
+  
+  /* Gradient legend for temperature scale with black background */
+  .legend-gradient {
+    width: 40px;
+    height: 400px;
+    background: linear-gradient(
+      to top,
+       #004D00,#008000, #00B300, #33CC33, #66FF66,
+      #99FF99, #BFFFC2, #DFFFD6
+    );
+    border-radius: 12px;
+  }
+  #DFFFD6, #BFFFC2, #99FF99, #66FF66, #33CC33, #00B300, #008000
+  
+  /* Temperature labels in black theme */
+  .legend-labels {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 400px;
+    margin-left: 20px;
+  }
+  
+  .legend-label {
+    color: white;
+    font-size: 16px;
+  }
