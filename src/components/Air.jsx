@@ -71,7 +71,7 @@ const MapChart = () => {
   const handleMouseEnter = (event, geo, d) => {
     const countryName = geo.properties.name;
     const countryData = d ? parseFloat(d.predicted_emission) : "No data";
-    setTooltipContent(`${countryName}: ${countryData} °C`);
+    setTooltipContent(`${countryName}: ${countryData}`);
     setTooltipPosition({ x: event.pageX, y: event.pageY });
   };
 
