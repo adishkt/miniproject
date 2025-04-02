@@ -10,6 +10,7 @@
     width: 180px; /* Increased width for labels */
     display: flex;
     align-items: center;
+    z-index: 1000;
   }
   
   /* Gradient legend for temperature scale with black background */
@@ -38,5 +39,76 @@
     color: white;
     font-size: 14px; /* Slightly reduced to prevent overlap */
     white-space: nowrap; /* Prevent text wrapping */
+  }
+  
+  /* Responsive styles for tablets */
+  @media screen and (max-width: 1024px) {
+    .legend {
+      left: 10px;
+      padding: 15px;
+      width: 150px;
+    }
+  
+    .legend-gradient {
+      width: 30px;
+      height: 300px;
+    }
+  
+    .legend-labels {
+      height: 300px;
+      margin-left: 33px;
+    }
+  
+    .legend-label {
+      font-size: 12px;
+    }
+  }
+  
+  /* Responsive styles for mobile */
+  @media screen and (max-width: 768px) {
+    .legend {
+      left: 5px;
+      top: 15%;
+      padding: 10px;
+      width: 120px;
+    }
+  
+    .legend-gradient {
+      width: 25px;
+      height: 250px;
+    }
+  
+    .legend-labels {
+      height: 250px;
+      margin-left: 28px;
+    }
+  
+    .legend-label {
+      font-size: 10px;
+    }
+  }
+  
+  /* Small mobile devices */
+  @media screen and (max-width: 480px) {
+    .legend {
+      left: 5px;
+      top: 10%;
+      padding: 8px;
+      width: 100px;
+    }
+  
+    .legend-gradient {
+      width: 20px;
+      height: 200px;
+    }
+  
+    .legend-labels {
+      height: 200px;
+      margin-left: 23px;
+    }
+  
+    .legend-label {
+      font-size: 8px;
+    }
   }
   

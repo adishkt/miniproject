@@ -9,25 +9,35 @@ import {
   Graticule,
   ZoomableGroup
 } from "react-simple-maps";
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { Typography, ButtonGroup, Button } from "@mui/material";
+import { Typography, IconButton, Select, MenuItem, FormControl, InputLabel, Box } from "@mui/material";
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 import "./map.css";
 
 const geoUrl = "/features.json";
 
 const colorScale = scaleLinear()
-  .domain([-15, 0, 15, 30, 45, 60, 75, 95])
-  .range(["#87CEEB", "#B0E0E6", "#FFE4B5", "#FFDAB9", "#FFA07A", "#FF8C00", "#FF6347", "#FF4500"]);
+  .domain([-15, 0, 15, 30, 40])
+  .range([
+    "#40bad1", // Blue for cold (-15°C)
+    "#d9ffd9", // Light green for cool (0°C)
+    "#ffffad", // Light yellow for mild (15°C)
+    "#df603f", // Red for warm (30°C)
+    "#df603f"  // Red for hot (40°C)
+  ]);
+
+const months = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
 
 const MapChart = () => {
   const [data, setData] = useState([]);
-  const [tooltipContent, setTooltipContent] = useState("");
+  const [tooltipContent, setTooltipContent] = useState(null);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
-  const [year, setYear] = useState(null);
-  const [month, setMonth] = useState(null);
-  const [zoomLevel, setZoomLevel] = useState(1);
+  const [year, setYear] = useState("");
+  const [month, setMonth] = useState("");
+  const [zoomLevel, setZoomLevel] = useState(0.8);
 
   useEffect(() => {
     csv(`/Temperature Predictions.csv`).then((csvData) => {
@@ -44,14 +54,15 @@ const MapChart = () => {
   }, []);
 
   const filteredData = data.filter((d) => {
-    return (!year || d.year === year) && (!month || d.month === month);
+    return (!year || d.year === parseInt(year)) && (!month || d.month === parseInt(month) + 1);
   });
 
-  const handleDateChange = (date) => {
-    if (date) {
-      setYear(date.year());
-      setMonth(date.month() + 1); // Using date.month() returns 0-indexed month, so adding 1
-    }
+  const handleYearChange = (event) => {
+    setYear(event.target.value);
+  };
+
+  const handleMonthChange = (event) => {
+    setMonth(event.target.value);
   };
 
   const handleMouseEnter = (event, geo, d) => {
@@ -66,65 +77,188 @@ const MapChart = () => {
   const handleZoomIn = () => setZoomLevel((prev) => Math.min(prev * 1.5, 10));
   const handleZoomOut = () => setZoomLevel((prev) => Math.max(prev / 1.5, 1));
 
-  return (
-    <div style={{ position: "relative", width: "100%", height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
-      <Typography variant="h3" component="div" sx={{ color: "white", fontFamily: "fantasy", paddingTop: "20px" }}>
-        Surface temperature
-      </Typography>
-      <br />
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DatePicker
-          label="Select Month & Year"
-          views={["month", "year"]}
-          onChange={handleDateChange}
-          sx={{ width: "420px", backgroundColor: "yellow" }}
-        />
-        <h1>Selected Year: {year}, Month: {month}</h1>
-      </LocalizationProvider>
+  // Get unique years from data
+  const years = [...new Set(data.map(d => d.year))].sort((a, b) => b - a);
 
-      <ButtonGroup style={{ margin: "10px" }}>
-        <Button onClick={handleZoomIn}>Zoom In</Button>
-        <Button onClick={handleZoomOut}>Zoom Out</Button>
-      </ButtonGroup>
-      <div className="legend1">
+  return (
+    <div style={{ 
+      position: "relative", 
+      width: "100%", 
+      height: "100vh", 
+      display: "flex", 
+      flexDirection: "column", 
+      justifyContent: "flex-start", 
+      alignItems: "center",
+      padding: "10px 0"
+    }}>
+      <div style={{ 
+        width: "100%", 
+        display: "flex", 
+        flexDirection: "column", 
+        alignItems: "center",
+        marginBottom: "20px"
+      }}>
+        <Box sx={{ 
+          display: 'flex', 
+          gap: 2, 
+          mb: 1,
+          marginTop: "10px"
+        }}>
+          <FormControl size="small" sx={{ minWidth: 100, '& .MuiInputBase-root': { height: '32px' } }}>
+            <InputLabel sx={{ color: 'white', fontSize: '0.8rem', transform: 'translate(14px, 8px) scale(1)' }}>Year</InputLabel>
+            <Select
+              value={year}
+              label="Year"
+              onChange={handleYearChange}
+              sx={{ 
+                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                color: 'white',
+                fontSize: '0.8rem',
+                '& .MuiOutlinedInput-notchedOutline': {
+                  borderColor: 'white',
+                },
+                '&:hover .MuiOutlinedInput-notchedOutline': {
+                  borderColor: 'white',
+                },
+                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                  borderColor: 'white',
+                }
+              }}
+            >
+              <MenuItem value="" sx={{ fontSize: '0.8rem' }}>All Years</MenuItem>
+              {years.map((year) => (
+                <MenuItem key={year} value={year} sx={{ fontSize: '0.8rem' }}>{year}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          <FormControl size="small" sx={{ minWidth: 100, '& .MuiInputBase-root': { height: '32px' } }}>
+            <InputLabel sx={{ color: 'white', fontSize: '0.8rem', transform: 'translate(14px, 8px) scale(1)' }}>Month</InputLabel>
+            <Select
+              value={month}
+              label="Month"
+              onChange={handleMonthChange}
+              sx={{ 
+                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                color: 'white',
+                fontSize: '0.8rem',
+                '& .MuiOutlinedInput-notchedOutline': {
+                  borderColor: 'white',
+                },
+                '&:hover .MuiOutlinedInput-notchedOutline': {
+                  borderColor: 'white',
+                },
+                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                  borderColor: 'white',
+                }
+              }}
+            >
+              <MenuItem value="" sx={{ fontSize: '0.8rem' }}>All Months</MenuItem>
+              {months.map((month, index) => (
+                <MenuItem key={month} value={index} sx={{ fontSize: '0.8rem' }}>{month}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
+      </div>
+
+      <div style={{ 
+        position: 'relative', 
+        width: '100%', 
+        height: 'calc(100vh - 200px)', 
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        overflow: 'hidden',
+        border: '1px solid rgba(255, 255, 255, 0.1)',
+        borderRadius: '8px',
+        margin: '0 20px'
+      }}>
+        <div style={{ 
+          position: 'absolute', 
+          bottom: '20px', 
+          right: '20px', 
+          display: 'flex', 
+          flexDirection: 'column', 
+          gap: '8px',
+          zIndex: 1000
+        }}>
+          <IconButton 
+            onClick={handleZoomIn}
+            sx={{
+              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              color: 'white',
+              '&:hover': {
+                backgroundColor: 'rgba(255, 255, 255, 0.2)',
+              }
+            }}
+          >
+            <AddIcon />
+          </IconButton>
+          <IconButton 
+            onClick={handleZoomOut}
+            sx={{
+              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              color: 'white',
+              '&:hover': {
+                backgroundColor: 'rgba(255, 255, 255, 0.2)',
+              }
+            }}
+          >
+            <RemoveIcon />
+          </IconButton>
+        </div>
+
+        <ComposableMap projectionConfig={{ rotate: [-10, 0, 0], scale: 147 }}>
+          <ZoomableGroup 
+            zoom={zoomLevel}
+          >
+            <Sphere stroke="#00000" strokeWidth={0.5} />
+            <Graticule stroke="#00000" strokeWidth={0.5} />
+            {filteredData.length > 0 && (
+              <Geographies geography={geoUrl}>
+                {({ geographies }) =>
+                  geographies.map((geo) => {
+                    const d = filteredData.find((s) => s.country === geo.properties.name);
+                    const countryData = d ? parseFloat(d.predicted_temperature) : undefined;
+                    return (
+                      <Geography
+                        key={geo.rsmKey}
+                        geography={geo}
+                        fill={countryData !== undefined ? colorScale(countryData) : "#F5F4Fb"}
+                        onMouseEnter={(event) => handleMouseEnter(event, geo, d)}
+                        onMouseLeave={handleMouseLeave}
+                        style={{
+                          default: { outline: "none" },
+                          hover: { outline: "none", fill: "#34495E" },
+                          pressed: { outline: "none" }
+                        }}
+                      />
+                    );
+                  })
+                }
+              </Geographies>
+            )}
+          </ZoomableGroup>
+        </ComposableMap>
+      </div>
+
+      <div style={{ 
+        width: "100%", 
+        display: "flex", 
+        justifyContent: "center", 
+        alignItems: "center",
+        marginTop: "20px"
+      }}>
+        <div className="legend1">
           <div className="legend-gradient1"></div>
           <div className="legend-labels1">
-            {[-15, 0, 15, 30, 45, 60, 75, 95].map((temp, index) => (
+            {[-15, 0, 15, 30, 40].map((temp, index) => (
               <span key={index} className="legend-label1">{temp}°C</span>
             ))}
           </div>
         </div>
-
-      <ComposableMap projectionConfig={{ rotate: [-10, 0, 0], scale: 147 }}>
-        <ZoomableGroup zoom={zoomLevel}>
-          <Sphere stroke="#00000" strokeWidth={0.5} />
-          <Graticule stroke="#00000" strokeWidth={0.5} />
-          {filteredData.length > 0 && (
-            <Geographies geography={geoUrl}>
-              {({ geographies }) =>
-                geographies.map((geo) => {
-                  const d = filteredData.find((s) => s.country === geo.properties.name);
-                  const countryData = d ? parseFloat(d.predicted_temperature) : undefined;
-                  return (
-                    <Geography
-                      key={geo.rsmKey}
-                      geography={geo}
-                      fill={countryData !== undefined ? colorScale(countryData) : "#F5F4Fb"}
-                      onMouseEnter={(event) => handleMouseEnter(event, geo, d)}
-                      onMouseLeave={handleMouseLeave}
-                      style={{
-                        default: { outline: "none" },
-                        hover: { outline: "none", fill: "#FF5722" },
-                        pressed: { outline: "none" }
-                      }}
-                    />
-                  );
-                })
-              }
-            </Geographies>
-          )}
-        </ZoomableGroup>
-      </ComposableMap>
+      </div>
 
       {tooltipContent && (
         <div
@@ -132,11 +266,12 @@ const MapChart = () => {
             position: "absolute",
             top: tooltipPosition.y + 10,
             left: tooltipPosition.x + 10,
-            backgroundColor: "black",
-            color: "white",
+            backgroundColor: "rgba(44, 62, 80, 0.9)",
+            color: "#ECF0F1",
             padding: "10px",
             borderRadius: "5px",
-            pointerEvents: "none"
+            pointerEvents: "none",
+            boxShadow: "0 2px 4px rgba(0,0,0,0.2)"
           }}
         >
           {tooltipContent}

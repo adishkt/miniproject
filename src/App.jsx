@@ -14,14 +14,12 @@ function App() {
   return (
     <>
       <Nav/>
-      <Grid2>
       <Routes>
         
         <Route path="/" element={<Mapp/>} />
         <Route path="/map2" element={<Air/>} />
        
       </Routes>
-      </Grid2>
     </>
   );
 }

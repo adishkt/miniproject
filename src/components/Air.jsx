@@ -9,40 +9,32 @@ import {
   Graticule,
   ZoomableGroup
 } from "react-simple-maps";
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { Typography, ButtonGroup, Button } from "@mui/material";
-import "./air1.css";
+import { Typography, IconButton, Select, MenuItem, FormControl, InputLabel, Box } from "@mui/material";
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
+import "./map.css";
 
-const geoUrl = "/features.json";  // Your geo features file
+const geoUrl = "/features.json";
 
 const colorScale = scaleLinear()
   .domain([0, 5000000, 10000000, 15000000, 20000000, 25000000, 30000000, 35000000])
   .range([
-    "#E6FFE6", // Very Light Green
-    "#CCFFCC", // Pale Mint Green
-    "#B3FFB3", // Soft Pastel Green
-    "#99FF99", // Light Lime Green
-    "#80FF80", // Mild Green
-    "#66FF66", // Fresh Green
-    "#4DFF4D", // Soft Bright Green
-    "#33FF33"  // Light Vibrant Green
+    "#d9ffd9", // Lightest green for lowest emissions
+    "#c2e6c2", // Light-medium green
+    "#a3d9a3", // Medium-light green
+    "#84cc84", // Medium green
+    "#65bf65", // Medium-dark green
+    "#46b246", // Dark-medium green
+    "#27a527", // Dark green
+    "#1c502a"  // Darkest green for highest emissions
   ]);
-
-
-
-
-
-
-
 
 const MapChart = () => {
   const [data, setData] = useState([]);
-  const [tooltipContent, setTooltipContent] = useState("");
+  const [tooltipContent, setTooltipContent] = useState(null);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
-  const [year, setYear] = useState(null);
-  const [zoomLevel, setZoomLevel] = useState(1);
+  const [year, setYear] = useState("");
+  const [zoomLevel, setZoomLevel] = useState(0.8);
 
   useEffect(() => {
     csv(`/ghg_predictions.csv`).then((csvData) => {
@@ -57,15 +49,12 @@ const MapChart = () => {
     });
   }, []);
 
-  // Filter data based on selected year
   const filteredData = data.filter((d) => {
-    return !year || d.year === year;
+    return !year || d.year === parseInt(year);
   });
 
-  const handleDateChange = (date) => {
-    if (date) {
-      setYear(date.year());
-    }
+  const handleYearChange = (event) => {
+    setYear(event.target.value);
   };
 
   const handleMouseEnter = (event, geo, d) => {
@@ -75,80 +64,167 @@ const MapChart = () => {
     setTooltipPosition({ x: event.pageX, y: event.pageY });
   };
 
-  const handleMouseLeave = () => setTooltipContent("");
+  const handleMouseLeave = () => setTooltipContent(null);
 
   const handleZoomIn = () => setZoomLevel((prev) => Math.min(prev * 1.5, 10));
   const handleZoomOut = () => setZoomLevel((prev) => Math.max(prev / 1.5, 1));
 
-  // If filteredData is empty, display a message
-  if (filteredData.length === 0) {
-    return <Typography>No data available for the selected year</Typography>;
-  }
+  // Get unique years from data
+  const years = [...new Set(data.map(d => d.year))].sort((a, b) => b - a);
 
   return (
-    <div style={{ position: "relative", width: "100%", height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
-      <Typography variant="h3" component="div" sx={{ color: "white", fontFamily: "fantasy", paddingTop: "20px" }}>
-        Surface temperature
-      </Typography>
-      <br />
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DatePicker
-          label="Select Year"
-          views={["year"]}
-          onChange={handleDateChange}
-          sx={{ width: "420px", backgroundColor: "yellow" }}
-        />
-        <h1>Selected Year: {year}</h1>
-      </LocalizationProvider>
+    <div style={{ 
+      position: "relative", 
+      width: "100%", 
+      height: "100vh", 
+      display: "flex", 
+      flexDirection: "column", 
+      justifyContent: "flex-start", 
+      alignItems: "center",
+      padding: "10px 0"
+    }}>
+      <div style={{ 
+        width: "100%", 
+        display: "flex", 
+        flexDirection: "column", 
+        alignItems: "center",
+        marginBottom: "20px"
+      }}>
+        <Box sx={{ 
+          display: 'flex', 
+          gap: 2, 
+          mb: 1,
+          marginTop: "10px"
+        }}>
+          <FormControl size="small" sx={{ minWidth: 100, '& .MuiInputBase-root': { height: '32px' } }}>
+            <InputLabel sx={{ color: 'white', fontSize: '0.8rem', transform: 'translate(14px, 8px) scale(1)' }}>Year</InputLabel>
+            <Select
+              value={year}
+              label="Year"
+              onChange={handleYearChange}
+              sx={{ 
+                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                color: 'white',
+                fontSize: '0.8rem',
+                '& .MuiOutlinedInput-notchedOutline': {
+                  borderColor: 'white',
+                },
+                '&:hover .MuiOutlinedInput-notchedOutline': {
+                  borderColor: 'white',
+                },
+                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                  borderColor: 'white',
+                }
+              }}
+            >
+              <MenuItem value="" sx={{ fontSize: '0.8rem' }}>All Years</MenuItem>
+              {years.map((year) => (
+                <MenuItem key={year} value={year} sx={{ fontSize: '0.8rem' }}>{year}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
+      </div>
 
-      <ButtonGroup style={{ margin: "10px" }}>
-        <Button onClick={handleZoomIn}>Zoom In</Button>
-        <Button onClick={handleZoomOut}>Zoom Out</Button>
-      </ButtonGroup>
+      <div style={{ 
+        position: 'relative', 
+        width: '100%', 
+        height: 'calc(100vh - 200px)', 
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        overflow: 'hidden',
+        border: '1px solid rgba(255, 255, 255, 0.1)',
+        borderRadius: '8px',
+        margin: '0 20px'
+      }}>
+        <div style={{ 
+          position: 'absolute', 
+          bottom: '20px', 
+          right: '20px', 
+          display: 'flex', 
+          flexDirection: 'column', 
+          gap: '8px',
+          zIndex: 1000
+        }}>
+          <IconButton 
+            onClick={handleZoomIn}
+            sx={{
+              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              color: 'white',
+              '&:hover': {
+                backgroundColor: 'rgba(255, 255, 255, 0.2)',
+              }
+            }}
+          >
+            <AddIcon />
+          </IconButton>
+          <IconButton 
+            onClick={handleZoomOut}
+            sx={{
+              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              color: 'white',
+              '&:hover': {
+                backgroundColor: 'rgba(255, 255, 255, 0.2)',
+              }
+            }}
+          >
+            <RemoveIcon />
+          </IconButton>
+        </div>
 
-      <div className="legend">
-          <div className="legend-gradient">
-          <div className="legend-labels">
-    {[0, 5000000, 10000000, 15000000, 20000000, 25000000, 30000000, 35000000].map((value, index) => (
-      <span key={index} className="legend-label">{value}</span>
+        <ComposableMap projectionConfig={{ rotate: [-10, 0, 0], scale: 147 }}>
+          <ZoomableGroup 
+            zoom={zoomLevel}
+          >
+            <Sphere stroke="#00000" strokeWidth={0.5} />
+            <Graticule stroke="#00000" strokeWidth={0.5} />
+            {filteredData.length > 0 && (
+              <Geographies geography={geoUrl}>
+                {({ geographies }) =>
+                  geographies.map((geo) => {
+                    const d = filteredData.find((s) => s.country === geo.properties.name);
+                    const countryData = d ? parseFloat(d.predicted_emission) : undefined;
+                    return (
+                      <Geography
+                        key={geo.rsmKey}
+                        geography={geo}
+                        fill={countryData !== undefined ? colorScale(countryData) : "#F5F4Fb"}
+                        onMouseEnter={(event) => handleMouseEnter(event, geo, d)}
+                        onMouseLeave={handleMouseLeave}
+                        style={{
+                          default: { outline: "none" },
+                          hover: { outline: "none", fill: "#34495E" },
+                          pressed: { outline: "none" }
+                        }}
+                      />
+                    );
+                  })
+                }
+              </Geographies>
+            )}
+          </ZoomableGroup>
+        </ComposableMap>
+      </div>
+
+      <div style={{ 
+        width: "100%", 
+        display: "flex", 
+        justifyContent: "center", 
+        alignItems: "center",
+        marginTop: "20px"
+      }}>
+        <div className="legend1">
+          <div className="legend-gradient1" style={{
+            background: "linear-gradient(to top, #1c502a, #246937, #d9ffd9)"
+          }}></div>
+          <div className="legend-labels1">
+            {[0, 5000000, 10000000, 15000000, 20000000, 25000000, 30000000, 35000000].map((value, index) => (
+              <span key={index} className="legend-label1">{value}</span>
             ))}
           </div>
         </div>
-        
-        
-</div>
-
-
-      <ComposableMap projectionConfig={{ rotate: [-10, 0, 0], scale: 147 }}>
-        <ZoomableGroup zoom={zoomLevel}>
-          <Sphere stroke="#00000" strokeWidth={0.5} />
-          <Graticule stroke="#00000" strokeWidth={0.5} />
-          {filteredData.length > 0 && (
-            <Geographies geography={geoUrl}>
-              {({ geographies }) =>
-                geographies.map((geo) => {
-                  const d = filteredData.find((s) => s.country === geo.properties.name);
-                  const countryData = d ? parseFloat(d.predicted_emission) : undefined;
-                  return (
-                    <Geography
-                      key={geo.rsmKey}
-                      geography={geo}
-                      fill={countryData !== undefined ? colorScale(countryData) : "#F5F4Fb"}
-                      onMouseEnter={(event) => handleMouseEnter(event, geo, d)}
-                      onMouseLeave={handleMouseLeave}
-                      style={{
-                        default: { outline: "none" },
-                        hover: { outline: "none", fill: "#FF5722" },
-                        pressed: { outline: "none" }
-                      }}
-                    />
-                  );
-                })
-              }
-            </Geographies>
-          )}
-        </ZoomableGroup>
-      </ComposableMap>
+      </div>
 
       {tooltipContent && (
         <div
@@ -156,11 +232,12 @@ const MapChart = () => {
             position: "absolute",
             top: tooltipPosition.y + 10,
             left: tooltipPosition.x + 10,
-            backgroundColor: "black",
-            color: "white",
+            backgroundColor: "rgba(44, 62, 80, 0.9)",
+            color: "#ECF0F1",
             padding: "10px",
             borderRadius: "5px",
-            pointerEvents: "none"
+            pointerEvents: "none",
+            boxShadow: "0 2px 4px rgba(0,0,0,0.2)"
           }}
         >
           {tooltipContent}

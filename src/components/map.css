@@ -1,39 +1,110 @@
 /* Legend container styling */
 .legend1 {
-    position: absolute;
-    left: 20px;
-    top: 20%;
-    transform: translateY(-50%);
-    background-color: rgba(0, 0, 0, 0.9);
-    padding: 20px;
-    border-radius: 12px;
-    width: 120px;
-    display: flex;
-    align-items: center;
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.9);
+  padding: 15px;
+  border-radius: 12px;
+  width: 100px;
+  display: flex;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Gradient legend for temperature scale with black background */
+.legend-gradient1 {
+  width: 30px;
+  height: 300px;
+  background: linear-gradient(
+    to top,
+    #FF4500, #FF6347, #FF8C00, #FFA07A, #FFDAB9,
+    #FFE4B5, #B0E0E6, #87CEEB
+  );
+  border-radius: 12px;
+}
+
+/* Temperature labels in black theme */
+.legend-labels1 {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 300px;
+  margin-left: 15px;
+}
+
+.legend-label1 {
+  color: white;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+/* Responsive styles for tablets */
+@media screen and (max-width: 1024px) {
+  .legend1 {
+    left: 10px;
+    padding: 12px;
+    width: 90px;
   }
-  
-  /* Gradient legend for temperature scale with black background */
+
   .legend-gradient1 {
-    width: 40px;
-    height: 400px;
-    background: linear-gradient(
-      to top,
-      #FF4500, #FF6347, #FF8C00, #FFA07A, #FFDAB9,
-      #FFE4B5, #B0E0E6, #87CEEB
-    );
-    border-radius: 12px;
+    width: 25px;
+    height: 250px;
   }
-  
-  /* Temperature labels in black theme */
+
   .legend-labels1 {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 400px;
-    margin-left: 20px;
+    height: 250px;
+    margin-left: 12px;
   }
-  
+
   .legend-label1 {
-    color: white;
-    font-size: 16px;
+    font-size: 12px;
   }
+}
+
+/* Responsive styles for mobile */
+@media screen and (max-width: 768px) {
+  .legend1 {
+    left: 5px;
+    padding: 10px;
+    width: 80px;
+  }
+
+  .legend-gradient1 {
+    width: 20px;
+    height: 200px;
+  }
+
+  .legend-labels1 {
+    height: 200px;
+    margin-left: 10px;
+  }
+
+  .legend-label1 {
+    font-size: 10px;
+  }
+}
+
+/* Small mobile devices */
+@media screen and (max-width: 480px) {
+  .legend1 {
+    left: 5px;
+    padding: 8px;
+    width: 70px;
+  }
+
+  .legend-gradient1 {
+    width: 15px;
+    height: 150px;
+  }
+
+  .legend-labels1 {
+    height: 150px;
+    margin-left: 8px;
+  }
+
+  .legend-label1 {
+    font-size: 8px;
+  }
+}

@@ -15,7 +15,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Arial, sans-serif;
+  font-family: 'Russo One', sans-serif;
 }
 
 html, body {
@@ -24,29 +24,56 @@ html, body {
   overflow-x: hidden;
   background-color: #000;
   color: white;
-  zoom: 0; /* Ensure no zoom issues */
+  font-size: 16px;
 }
 
-/* Ensure proper viewport scaling */
+/* Responsive font sizing */
 @media screen and (max-width: 768px) {
   html {
-    font-size: 11px;
+    font-size: 14px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  html {
+    font-size: 12px;
   }
 }
 
 /* Container styling for consistent layout */
 .container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
   padding: 20px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 /* Grid2 Custom Fix */
 .MuiGrid2-root {
   width: 100%;
+  margin: 0 !important;
+}
+
+/* Responsive Grid Breakpoints */
+@media screen and (min-width: 1200px) {
+  .container {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1199px) {
+  .container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .container {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Navigation styling */
@@ -54,13 +81,17 @@ Nav {
   width: 100%;
   background-color: #fefefe;
   padding: 10px 20px;
- 
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
 Nav a {
   color: rgb(216, 88, 88);
   text-decoration: none;
   margin: 0 15px;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
 }
 
 Nav a:hover {
@@ -72,28 +103,87 @@ button {
   background-color: #0e0d0d;
   color: white;
   border: none;
-  padding: 10px 20px;
-  margin: 10px;
+  padding: 8px 16px;
+  margin: 8px;
   cursor: pointer;
   border-radius: 5px;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
 }
 
 button:hover {
   background-color: #d00f0f;
 }
 
+/* Typography styles */
+h1, h2, h3, h4, h5, h6 {
+  font-size: 1.5rem;
+  letter-spacing: 2px;
+  margin-bottom: 1rem;
+}
+
+h1 { font-size: 2rem; }
+h2 { font-size: 1.75rem; }
+h3 { font-size: 1.5rem; }
+h4 { font-size: 1.25rem; }
+h5 { font-size: 1.1rem; }
+h6 { font-size: 1rem; }
+
+/* Responsive typography */
+@media screen and (max-width: 768px) {
+  h1 { font-size: 1.75rem; }
+  h2 { font-size: 1.5rem; }
+  h3 { font-size: 1.25rem; }
+  h4 { font-size: 1.1rem; }
+  h5 { font-size: 1rem; }
+  h6 { font-size: 0.9rem; }
+}
+
+@media screen and (max-width: 480px) {
+  h1 { font-size: 1.5rem; }
+  h2 { font-size: 1.25rem; }
+  h3 { font-size: 1.1rem; }
+  h4 { font-size: 1rem; }
+  h5 { font-size: 0.9rem; }
+  h6 { font-size: 0.8rem; }
+}
+
 /* Responsive Map Styling */
 .map-container {
   width: 100%;
-  height: calc(100vh - 100px); /* Adjust based on nav height */
+  height: calc(100vh - 60px);
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 10px;
 }
 
 /* Fix for overflow in map visualization */
 canvas, svg {
   max-width: 100%;
   height: auto;
+  object-fit: contain;
+}
+
+/* Additional responsive utilities */
+@media screen and (max-width: 480px) {
+  .map-container {
+    height: calc(100vh - 50px);
+    padding: 5px;
+  }
+  
+  button {
+    padding: 8px 16px;
+    margin: 5px;
+  }
+  
+  Nav {
+    padding: 5px 10px;
+  }
+  
+  Nav a {
+    margin: 0 8px;
+    font-size: 0.9rem;
+  }
 }
 
