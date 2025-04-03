@@ -230,7 +230,11 @@ const MapChart = () => {
                         onMouseLeave={handleMouseLeave}
                         style={{
                           default: { outline: "none" },
-                          hover: { outline: "none", fill: "#34495E" },
+                          hover: { 
+                            outline: "none", 
+                            opacity: 0.7,
+                            transition: "opacity 0.2s"
+                          },
                           pressed: { outline: "none" }
                         }}
                       />

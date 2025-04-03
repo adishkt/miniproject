@@ -19,14 +19,14 @@ const geoUrl = "/features.json";
 const colorScale = scaleLinear()
   .domain([0, 5000000, 10000000, 15000000, 20000000, 25000000, 30000000, 35000000])
   .range([
-    "#d9ffd9", // Lightest green for lowest emissions
-    "#c2e6c2", // Light-medium green
-    "#a3d9a3", // Medium-light green
-    "#84cc84", // Medium green
-    "#65bf65", // Medium-dark green
-    "#46b246", // Dark-medium green
-    "#27a527", // Dark green
-    "#1c502a"  // Darkest green for highest emissions
+    "#fff8e1", // Very light pastel yellow for lowest emissions
+    "#ffe0b2", // Light pastel orange
+    "#ffcc80", // Medium-light pastel orange
+    "#ffb74d", // Medium pastel orange
+    "#ffa726", // Medium-dark pastel orange
+    "#ff9800", // Dark pastel orange
+    "#ff8f00", // Darker pastel orange
+    "#ff6f00"  // Darkest orange (but still visible)
   ]);
 
 const MapChart = () => {
@@ -194,7 +194,11 @@ const MapChart = () => {
                         onMouseLeave={handleMouseLeave}
                         style={{
                           default: { outline: "none" },
-                          hover: { outline: "none", fill: "#34495E" },
+                          hover: { 
+                            outline: "none", 
+                            opacity: 0.7,
+                            transition: "opacity 0.2s"
+                          },
                           pressed: { outline: "none" }
                         }}
                       />
@@ -205,25 +209,6 @@ const MapChart = () => {
             )}
           </ZoomableGroup>
         </ComposableMap>
-      </div>
-
-      <div style={{ 
-        width: "100%", 
-        display: "flex", 
-        justifyContent: "center", 
-        alignItems: "center",
-        marginTop: "20px"
-      }}>
-        <div className="legend1">
-          <div className="legend-gradient1" style={{
-            background: "linear-gradient(to top, #1c502a, #246937, #d9ffd9)"
-          }}></div>
-          <div className="legend-labels1">
-            {[0, 5000000, 10000000, 15000000, 20000000, 25000000, 30000000, 35000000].map((value, index) => (
-              <span key={index} className="legend-label1">{value}</span>
-            ))}
-          </div>
-        </div>
       </div>
 
       {tooltipContent && (
