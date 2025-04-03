@@ -38,11 +38,15 @@ const MapChart = () => {
 
   useEffect(() => {
     csv(`/ghg_predictions.csv`).then((csvData) => {
-      const formattedData = csvData.map((d) => ({
-        ...d,
-        year: parseInt(d.year, 10),
-        predicted_emission: parseFloat(d.predicted_emission),
-      }));
+      const formattedData = csvData.map((d) => {
+        const baseYear = 2020; // Reference year
+        const yearMultiplier = 1 + ((parseInt(d.year, 10) - baseYear) * 0.02); // 2% increase per year
+        return {
+          ...d,
+          year: parseInt(d.year, 10),
+          predicted_emission: parseFloat(d.predicted_emission) * yearMultiplier,
+        };
+      });
       setData(formattedData);
     }).catch((error) => {
       console.error("Error loading CSV data:", error);
@@ -232,4 +236,4 @@ const MapChart = () => {
   );
 };
 
-export default MapChart;
+export default MapChart; 
